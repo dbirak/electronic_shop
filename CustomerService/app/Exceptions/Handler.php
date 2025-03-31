@@ -38,6 +38,13 @@ class Handler extends ExceptionHandler
         if ($e instanceof AuthorizationException) {
             return response()->json(['message' => 'Forbidden!'], 403);
         }
+        if ($e instanceof NotFoundException) {
+            return response()->json(['message' => 'Nie znaleziono zasobu!'], 404);
+        }
+        if ($e instanceof ConflictException) {
+            return response()->json(['message' => 'Błąd integrlaności danych!'], 409);
+        }
+
         return parent::render($request, $e);
     }
 }
