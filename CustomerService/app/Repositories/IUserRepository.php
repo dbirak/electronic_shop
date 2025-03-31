@@ -15,15 +15,11 @@ interface IUserRepository
 
     public function comparePassword(string $password, User $user);
 
-    public function createToken(User $user, Role $role);
+    public function createToken(User $user);
 
     public function deleteToken(Request $request);
 
-    public function createManager(RegisterUserRequest $request);
-
-    public function createModerator(RegisterUserRequest $request);
-
-    public function createSeller(RegisterUserRequest $request);
+    public function createUser(RegisterUserRequest $request);
 
     public function getUserById(int $id);
 

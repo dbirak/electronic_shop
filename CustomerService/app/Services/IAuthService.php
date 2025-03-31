@@ -10,11 +10,7 @@ use Illuminate\Http\Request;
 
 interface IAuthService
 {
-    public function registerManager(RegisterUserRequest $request);
-
-    public function registerModerator(RegisterUserRequest $request);
-
-    public function registerSeller(RegisterUserRequest $request);
+    public function registerUser(RegisterUserRequest $request);
 
     public function login(LoginRequest $request);
 

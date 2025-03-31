@@ -11,7 +11,7 @@ class RegisterUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -23,8 +23,11 @@ class RegisterUserRequest extends FormRequest
     {
         return [
             "email" => "required|email|unique:users,email|max:255",
-            "first_name" => "required|alpha|max:50",
-            "last_name" => "required|alpha|max:50",
+            "first_name" => "required|string|max:50",
+            "last_name" => "required|string|max:50",
+            "phone" => "required|string|max:15",
+            "birth_date" => "required|date",
+            "newsletter" => "boolean",
             "password" => "required|string|min:9|max:255",
             "repeat_password" => "required|same:password",
         ];

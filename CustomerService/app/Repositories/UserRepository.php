@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Http\Requests\RegisterUserRequest;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,9 +20,9 @@ class UserRepository implements IUserRepository
         return Hash::check($password, $user->password);
     }
 
-    public function createToken(User $user, Role $role)
+    public function createToken(User $user)
     {
-        return $user->createToken('token', [$role['name']])->plainTextToken;
+        return $user->createToken('token', ['customer'])->plainTextToken;
     }
 
     public function deleteToken(Request $request)
@@ -31,40 +30,16 @@ class UserRepository implements IUserRepository
         $request->user()->tokens()->delete();
     }
 
-    public function createManager(RegisterUserRequest $request)
+    public function createUser(RegisterUserRequest $request)
     {
         $user = User::create([
             'first_name' => ucfirst(strtolower($request->first_name)),
             'last_name' => ucfirst(strtolower($request->last_name)),
             'email' => $request->email,
+            'phone' => $request->phone,
+            'birth_date' => $request->birth_date,
+            'newsletter' => $request->newsletter ?? false,
             'password' => bcrypt($request->password),
-            'role_id' => 1
-        ]);
-
-        return $user;
-    }
-
-    public function createModerator(RegisterUserRequest $request)
-    {
-        $user = User::create([
-            'first_name' => ucfirst(strtolower($request->first_name)),
-            'last_name' => ucfirst(strtolower($request->last_name)),
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role_id' => 2
-        ]);
-
-        return $user;
-    }
-
-    public function createSeller(RegisterUserRequest $request)
-    {
-        $user = User::create([
-            'first_name' => ucfirst(strtolower($request->first_name)),
-            'last_name' => ucfirst(strtolower($request->last_name)),
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role_id' => 3
         ]);
 
         return $user;

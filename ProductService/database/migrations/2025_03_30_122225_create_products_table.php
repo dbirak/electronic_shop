@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Category;
+use App\Models\Image;
 use App\Models\Promotion;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,8 +20,8 @@ return new class extends Migration
             $table->string('description', 1000);
             $table->decimal('price', 10, 2);
             $table->foreignIdFor(Promotion::class)->nullable()->constrained();
-            $table->foreignIdFor('category_id')->constrained();
-            $table->foreignIdFor("image_id")->constrained();
+            $table->foreignIdFor(Image::class)->constrained();
+            $table->foreignIdFor(Category::class)->constrained();
             $table->timestamps();
         });
     }

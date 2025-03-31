@@ -2,57 +2,43 @@
 
 namespace App\Services;
 
+use App\Exceptions\ConflictException;
+use App\Exceptions\NotFoundException;
+use App\Http\Mails\DeleteAccountMail;
+use App\Http\Mails\RegisterMail;
+use App\Http\Mails\ResetPasswordMail;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\DeleteAccountRequest;
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Repositories\IUserRepository;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterAdminRequest;
 use App\Http\Requests\RegisterUserRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Resources\UserResource;
-use App\Repositories\IRoleRepository;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AuthService implements IAuthService
 {
     protected $userRepository;
-    protected $roleRepository;
 
-    public function __construct(IUserRepository $iUserRepository, IRoleRepository $iRoleRepository)
+    public function __construct(IUserRepository $iUserRepository)
     {
         $this->userRepository = $iUserRepository;
-        $this->roleRepository = $iRoleRepository;
     }
 
-    public function registerManager(RegisterUserRequest $request)
+    public function registerUser(RegisterUserRequest $request)
     {
         $this->comparePasswordsFromRequest($request['password'], $request['repeat_password']);
-        $user = $this->userRepository->createManager($request);
+        $user = $this->userRepository->createUser($request);
 
-        $token = $this->createToken($user, 1);
-
-        return $this->returnUserWithToken($user, $token);
-    }
-
-    public function registerModerator(RegisterUserRequest $request)
-    {
-        $this->comparePasswordsFromRequest($request['password'], $request['repeat_password']);
-        $user = $this->userRepository->createModerator($request);
-
-        $token = $this->createToken($user, 2);
-
-        return $this->returnUserWithToken($user, $token);
-    }
-
-    public function registerSeller(RegisterUserRequest $request)
-    {
-        $this->comparePasswordsFromRequest($request['password'], $request['repeat_password']);
-        $user = $this->userRepository->createSeller($request);
-
-        $token = $this->createToken($user, 3);
+        $token = $this->createToken($user);
 
         return $this->returnUserWithToken($user, $token);
     }
@@ -79,8 +65,7 @@ class AuthService implements IAuthService
 
     public function createToken($user)
     {
-        $role = $this->roleRepository->getRoleById($user['role_id']);
-        return $this->userRepository->createToken($user, $role);
+        return $this->userRepository->createToken($user);
     }
 
     public function returnUserWithToken($user, $token)

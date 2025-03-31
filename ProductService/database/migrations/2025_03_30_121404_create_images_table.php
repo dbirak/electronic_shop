@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id();
             $table->string('main_image', 255);
             $table->json('additional_images');
-            $table->foreignIdFor(Product::class)->constrained();
             $table->timestamps();
         });
     }

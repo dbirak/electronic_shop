@@ -1,0 +1,293 @@
+openapi: 3.0.0
+info:
+  title: API Autoryzacji
+  description: API do zarządzania użytkownikami i ich autoryzacją
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api
+    description: Admin Service
+
+paths:
+  /auth/login:
+    post:
+      summary: Logowanie użytkownika
+      description: Umożliwia użytkownikowi zalogowanie się do systemu.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Sukces - zwraca token użytkownika
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResource"
+        "401":
+          description: Nieprawidłowe dane logowania
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      summary: Wylogowanie użytkownika
+      description: Umożliwia użytkownikowi wylogowanie się z systemu.
+      tags:
+        - Auth
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Użytkownik został pomyślnie wylogowany
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Wylogowanie przebiegło pomyślnie!"
+        "401":
+          description: Nieuwierzytelniony użytkownik
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/register/manager:
+    post:
+      summary: Rejestracja menedżera
+      description: Umożliwia rejestrację nowego użytkownika jako menedżera.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserRequest"
+      responses:
+        "201":
+          description: Sukces - użytkownik został zarejestrowany
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Rejestracja zakończona sukcesem!"
+        "422":
+          description: Nieprawidłowe dane rejestracyjne
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidateResponse"
+
+  /auth/register/moderator:
+    post:
+      summary: Rejestracja moderatora
+      description: Umożliwia rejestrację nowego użytkownika jako moderatora.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserRequest"
+      responses:
+        "201":
+          description: Sukces - użytkownik został zarejestrowany
+        "422":
+          description: Nieprawidłowe dane rejestracyjne
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidateResponse"
+
+  /auth/register/seller:
+    post:
+      summary: Rejestracja sprzedawcy
+      description: Umożliwia rejestrację nowego użytkownika jako sprzedawcy.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserRequest"
+      responses:
+        "201":
+          description: Sukces - użytkownik został zarejestrowany
+        "422":
+          description: Nieprawidłowe dane rejestracyjne
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidateResponse"
+
+  /auth/change-password:
+    post:
+      summary: Zmiana hasła użytkownika
+      description: Umożliwia zalogowanemu użytkownikowi zmianę hasła.
+      tags:
+        - Auth
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+      responses:
+        "200":
+          description: Hasło zostało pomyślnie zmienione
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Hasło zostało zmienione!"
+        "401":
+          description: Niepoprawne obecne hasło
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "manager@example.com"
+        password:
+          type: string
+          example: "123456789"
+
+    RegisterUserRequest:
+      type: object
+      required:
+        - email
+        - first_name
+        - last_name
+        - password
+        - repeat_password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "test@example.com"
+        first_name:
+          type: string
+          example: "Jan"
+        last_name:
+          type: string
+          example: "Kowalski"
+        password:
+          type: string
+          example: "HasloBezpieczne123"
+        repeat_password:
+          type: string
+          example: "HasloBezpieczne123"
+
+    ChangePasswordRequest:
+      type: object
+      required:
+        - password
+        - new_password
+        - repeat_new_password
+      properties:
+        password:
+          type: string
+          example: "StareHaslo123"
+        new_password:
+          type: string
+          example: "NoweHaslo456"
+        repeat_new_password:
+          type: string
+          example: "NoweHaslo456"
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Wystąpił błąd!"
+
+    ValidateResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Wystąpił błąd!"
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            email: ["Podany email jest już zajęty."]
+            password: ["Hasło musi mieć co najmniej 9 znaków."]
+
+    UserResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        first_name:
+          type: string
+          example: "Jan"
+        last_name:
+          type: string
+          example: "Kowalski"
+        email:
+          type: string
+          format: email
+          example: "manager@example.com"
+        role:
+          $ref: "#/components/schemas/RoleResource"
+
+    LoginResource:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "2|O3R9kNQs8vBgQYQ02pIg3n5xN01CrqLdE51simni956abfbb"
+        user_details:
+          $ref: "#/components/schemas/UserResource"
+
+    RoleResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "manager"

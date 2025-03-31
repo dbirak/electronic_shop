@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('last_name', 50);
             $table->string('phone', 15);
             $table->date('birth_date');
-            $table->newsletter('boolean')->default(false);
+            $table->string('newsletter')->default(false);
             $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();

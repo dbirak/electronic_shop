@@ -26,21 +26,9 @@ class AuthController extends Controller
         $this->authService = $iAuthService;
     }
 
-    public function registerManager(RegisterUserRequest $request)
+    public function registerUser(RegisterUserRequest $request)
     {
-        $res = $this->authService->registerManager($request);
-        return response($res, 201);
-    }
-
-    public function registerModerator(RegisterUserRequest $request)
-    {
-        $res = $this->authService->registerModerator($request);
-        return response($res, 201);
-    }
-
-    public function registerSeller(RegisterUserRequest $request)
-    {
-        $res = $this->authService->registerSeller($request);
+        $res = $this->authService->registerUser($request);
         return response($res, 201);
     }
 
