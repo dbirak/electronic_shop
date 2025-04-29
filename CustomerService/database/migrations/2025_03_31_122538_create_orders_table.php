@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->json('product_ids');
             $table->enum('status', ['pending', 'preparation', 'sent', 'completed', 'cancelled']);
-            $table->decimal('amomunt', 10, 2);
+            $table->decimal('amount', 10, 2);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('address_id');
             $table->unsignedBigInteger('invoices_id');

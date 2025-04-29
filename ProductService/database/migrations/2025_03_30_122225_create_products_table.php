@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignIdFor(Promotion::class)->nullable()->constrained();
             $table->foreignIdFor(Image::class)->constrained();
             $table->foreignIdFor(Category::class)->constrained();
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
     }
