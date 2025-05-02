@@ -78,6 +78,15 @@ class ProductService implements IProductService
     {
         $products = $this->productRepository->getProducts($request);
 
+        $foundIds = $products->pluck('id')->all();
+        $missingIds = array_diff($request['product_ids'], $foundIds);
+
+        if (!empty($missingIds)) {
+            throw new NotFoundException('Nie znaleziono produktów o ID: ' . implode(', ', $missingIds));
+        }
+
+        return $products;
+
         return ProductResource::collection($products);
     }
 }

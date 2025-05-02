@@ -8,7 +8,7 @@ interface IOrderRepository
 {
     public function getOrder(int $userId);
 
-    public function storeOrder(int $userId, StoreOrderRequest $request);
+    public function storeOrder(int $userId, StoreOrderRequest $request, $products);
 
     public function findOrderById(string $orderId);
 

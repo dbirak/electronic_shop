@@ -1,0 +1,378 @@
+openapi: 3.0.3
+info:
+  title: Example API
+  version: 1.0.0
+  description: API do zarządzania uwierzytelnianiem, adresami i zamówieniami.
+servers:
+  - url: http://localhost/api
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Logowanie użytkownika
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+            example:
+              email: "jan.kowalski@example.com"
+              password: "haslo123"
+      responses:
+        "200":
+          description: Zalogowano pomyślnie
+        "401":
+          description: Nieprawidłowe dane logowania
+
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: Wylogowanie użytkownika
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Wylogowano pomyślnie
+        "401":
+          description: Brak autoryzacji
+
+  /auth/register/user:
+    post:
+      tags:
+        - Auth
+      summary: Rejestracja nowego użytkownika
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserRequest"
+            example:
+              email: "anna.nowak@example.com"
+              first_name: "Anna"
+              last_name: "Nowak"
+              phone: "123456789"
+              birth_date: "1990-05-10"
+              newsletter: true
+              password: "silnehaslo123"
+              repeat_password: "silnehaslo123"
+      responses:
+        "201":
+          description: Użytkownik został zarejestrowany
+
+  /auth/change-password:
+    post:
+      tags:
+        - Auth
+      summary: Zmiana hasła użytkownika
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+            example:
+              password: "starehaslo123"
+              new_password: "nowehaslo456"
+              repeat_new_password: "nowehaslo456"
+      responses:
+        "200":
+          description: Hasło zostało zmienione
+        "401":
+          description: Brak autoryzacji
+
+  /addresses:
+    get:
+      tags:
+        - Address
+      summary: Pobierz listę adresów
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista adresów
+    post:
+      tags:
+        - Address
+      summary: Dodaj nowy adres
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreAddressRequest"
+            example:
+              name: "Dom"
+              adreess: "ul. Kwiatowa 15"
+              post_code: "00-001"
+              city: "Warszawa"
+      responses:
+        "201":
+          description: Adres został utworzony
+
+  /addresses/{id}:
+    get:
+      tags:
+        - Address
+      summary: Pobierz pojedynczy adres
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Adres został pobrany
+        "403":
+          description: Brak dostępu
+        "404":
+          description: Nie znaleziono
+    put:
+      tags:
+        - Address
+      summary: Zaktualizuj adres
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAddressRequest"
+            example:
+              name: "Biuro"
+              adreess: "ul. Przemysłowa 20"
+              post_code: "00-002"
+              city: "Kraków"
+      responses:
+        "200":
+          description: Adres został zaktualizowany
+    delete:
+      tags:
+        - Address
+      summary: Usuń adres
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Adres został usunięty
+
+  /orders:
+    get:
+      tags:
+        - Order
+      summary: Pobierz listę zamówień
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista zamówień
+    post:
+      tags:
+        - Order
+      summary: Utwórz nowe zamówienie
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreOrderRequest"
+            example:
+              name: "Zamówienie testowe"
+              address: "ul. Zakupowa 1"
+              post_code: "00-003"
+              city: "Gdańsk"
+              nip: "1234567890"
+              product_ids: [1, 2, 3]
+              status: "pending"
+              amount: 199.99
+              address_id: 5
+      responses:
+        "201":
+          description: Zamówienie zostało utworzone
+
+  /orders/{id}:
+    get:
+      tags:
+        - Order
+      summary: Pobierz szczegóły zamówienia
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Szczegóły zamówienia
+    delete:
+      tags:
+        - Order
+      summary: Anuluj zamówienie (jeśli ma status „pending”)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        "204":
+          description: Zamówienie anulowane
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    RegisterUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        newsletter:
+          type: boolean
+        password:
+          type: string
+        repeat_password:
+          type: string
+      required:
+        - email
+        - first_name
+        - last_name
+        - phone
+        - birth_date
+        - password
+        - repeat_password
+
+    ChangePasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        new_password:
+          type: string
+        repeat_new_password:
+          type: string
+      required:
+        - password
+        - new_password
+        - repeat_new_password
+
+    StoreAddressRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        adreess:
+          type: string
+        post_code:
+          type: string
+        city:
+          type: string
+      required:
+        - name
+        - adreess
+        - post_code
+        - city
+
+    UpdateAddressRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        adreess:
+          type: string
+        post_code:
+          type: string
+        city:
+          type: string
+      required:
+        - name
+        - adreess
+        - post_code
+        - city
+
+    StoreOrderRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        post_code:
+          type: string
+        city:
+          type: string
+        nip:
+          type: string
+        product_ids:
+          type: array
+          items:
+            type: integer
+        status:
+          type: string
+          enum: [pending, preparation, sent, completed, cancelled]
+        amount:
+          type: number
+        address_id:
+          type: integer
+      required:
+        - name
+        - address
+        - post_code
+        - city
+        - product_ids
+        - status
+        - amount
+        - address_id

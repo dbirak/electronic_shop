@@ -41,8 +41,13 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        $res = $this->orderService->storeOrder($request->user()->id, $request);
-        return response($res, 201);
+        try {
+            $res = $this->orderService->storeOrder($request->user()->id, $request);
+            return response($res, 201);
+        } catch (Exception $e) {
+            if ($e instanceof NotFoundException)
+                throw $e;
+        }
     }
 
     /**

@@ -15,16 +15,11 @@ class OrderRepository implements IOrderRepository
         return Order::where('user_id', $userId)->get();
     }
 
-    public function storeOrder(int $userId, StoreOrderRequest $request)
+    public function storeOrder(int $userId, StoreOrderRequest $request, $products)
     {
         $address = Address::where('id', $request["address_id"])->first();
 
-        $productIds = $request["product_ids"];
-        $products = Product::whereIn('id', $productIds)->get();
-
-        $totalAmount = $products->sum(function ($product) {
-            return $product->price;
-        });
+        $totalAmount = collect($products)->sum('price');
 
         $invoice = new Invoice();
         $invoice->name = $request["name"];
@@ -39,7 +34,6 @@ class OrderRepository implements IOrderRepository
 
         $invoice->amount = $totalAmount;
         $invoice->save();
-
 
         $order = new Order();
         $order->product_ids = json_encode($request["product_ids"]);
@@ -63,7 +57,9 @@ class OrderRepository implements IOrderRepository
     {
         $order = Order::where('id', $orderId)->first();
 
-        $order->is_deleted = true;
-        $order->save();
+        if ($order->status == 'pending') {
+            $order->status = 'cancelled';
+            $order->save();
+        }
     }
 }

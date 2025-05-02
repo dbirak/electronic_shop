@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,5 +24,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/auth/register/user', [AuthController::class, 'registerUser']);
-Route::post('/auth/register/admin', [AuthController::class, 'registerAdmin'])->middleware(['auth:sanctum', 'ability:admin']);
 Route::post('/auth/change-password', [AuthController::class, 'changePassword'])->middleware('auth:sanctum');
+
+Route::middleware(['auth:sanctum', 'ability:customer'])->group(function () {
+    Route::get('/addresses', [AddressController::class, 'index']);
+    Route::post('/addresses', [AddressController::class, 'store']);
+    Route::get('/addresses/{id}', [AddressController::class, 'show']);
+    Route::put('/addresses/{id}', [AddressController::class, 'update']);
+    Route::delete('/addresses/{id}', [AddressController::class, 'destroy']);
+
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::post('/orders', [OrderController::class, 'store']);
+    Route::get('/orders/{id}', [OrderController::class, 'show']);
+    Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
+});
