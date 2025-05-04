@@ -63,18 +63,24 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request)
     {
-        $data = $request->validated();
+        $multipart = $this->convertRequestToMultipart($request);
+
         $response = Http::withToken(env('ADMIN_TOKEN'))
-            ->post("{$this->productServiceUrl}/products", $data);
+            ->asMultipart()
+            ->post("{$this->productServiceUrl}/products", $multipart);
 
         return response()->json($response->json(), $response->status());
     }
 
     public function update(UpdateProductRequest $request, string $productId)
     {
-        $data = $request->validated();
+        $multipart = $this->convertRequestToMultipart($request);
+
         $response = Http::withToken(env('ADMIN_TOKEN'))
-            ->put("{$this->productServiceUrl}/products/{$productId}", $data);
+            ->asMultipart()
+            ->post("{$this->productServiceUrl}/products/{$productId}", $multipart);
+
+        return response()->json($response->json(), $response->status());
 
         return response()->json($response->json(), $response->status());
     }
@@ -110,5 +116,46 @@ class ProductController extends Controller
             ->post("{$this->productServiceUrl}/products/get", $data);
 
         return response()->json($response->json(), $response->status());
+    }
+
+    public function convertRequestToMultipart($request)
+    {
+        $multipart = [];
+
+        foreach ($request->except(array_keys($request->files->all())) as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $i => $item) {
+                    $multipart[] = [
+                        'name' => "{$key}[{$i}]",
+                        'contents' => $item,
+                    ];
+                }
+            } else {
+                $multipart[] = [
+                    'name' => $key,
+                    'contents' => $value,
+                ];
+            }
+        }
+
+        foreach ($request->allFiles() as $key => $file) {
+            if (is_array($file)) {
+                foreach ($file as $i => $single) {
+                    $multipart[] = [
+                        'name' => "{$key}[{$i}]",
+                        'contents' => fopen($single->getPathname(), 'r'),
+                        'filename' => $single->getClientOriginalName(),
+                    ];
+                }
+            } else {
+                $multipart[] = [
+                    'name' => $key,
+                    'contents' => fopen($file->getPathname(), 'r'),
+                    'filename' => $file->getClientOriginalName(),
+                ];
+            }
+        }
+
+        return $multipart;
     }
 }

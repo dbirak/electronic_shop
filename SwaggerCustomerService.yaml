@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: Example API
+  title: Customer Service API
   version: 1.0.0
-  description: API do zarządzania uwierzytelnianiem, adresami i zamówieniami.
+  description: API dla klientów pozwalające na składanie zamówień.
 servers:
-  - url: http://localhost/api
+  - url: http://localhost:8001/api
 paths:
   /auth/login:
     post:

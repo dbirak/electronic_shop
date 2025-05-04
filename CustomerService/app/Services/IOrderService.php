@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Requests\ChangeOrderStatusRequest;
 use App\Http\Requests\StoreOrderRequest;
 
 interface IOrderService
@@ -13,4 +14,8 @@ interface IOrderService
     public function destroyOrder(int $userId, string $orderId);
 
     public function showOrder(int $userId, string $orderId);
+
+    public function getActiveOrders();
+
+    public function changeOrderStatus(ChangeOrderStatusRequest $request, string $orderId);
 }

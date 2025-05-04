@@ -38,3 +38,8 @@ Route::middleware(['auth:sanctum', 'ability:customer'])->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 });
+
+Route::middleware(['verify.admin.token'])->group(function () {
+    Route::get('/orders/active', [OrderController::class, 'getActiveOrders']);
+    Route::patch('/orders/{orderId}/status', [OrderController::class, 'changeOrderStatus']);
+});

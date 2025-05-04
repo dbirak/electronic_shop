@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\NotFoundException;
+use App\Http\Requests\ChangeOrderStatusRequest;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Resources\OrderCollection;
 use App\Http\Resources\OrderResource;
@@ -62,5 +63,21 @@ class OrderService implements IOrderService
         if ($order['user_id'] !== $userId) throw new AuthorizationException();
 
         return new OrderResource($order);
+    }
+
+    public function getActiveOrders()
+    {
+        $orders = $this->orderRepository->getActiveOrders();
+
+        return new OrderCollection($orders);
+    }
+
+    public function changeOrderStatus(ChangeOrderStatusRequest $request, string $orderId)
+    {
+        $order = $this->orderRepository->findOrderById($orderId);
+
+        if (!isset($order)) throw new NotFoundException();
+
+        $this->orderRepository->changeOrderStatus($request, $orderId);
     }
 }

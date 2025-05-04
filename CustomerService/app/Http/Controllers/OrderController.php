@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ConflictException;
 use App\Exceptions\NotFoundException;
+use App\Http\Requests\ChangeOrderStatusRequest;
 use App\Http\Requests\StoreOrderRequest;
 use App\Services\IOrderService;
 use Exception;
@@ -93,6 +94,30 @@ class OrderController extends Controller
         } catch (Exception $e) {
             if ($e instanceof AuthorizationException)
                 throw $e;
+            if ($e instanceof NotFoundException)
+                throw $e;
+            if ($e instanceof ConflictException)
+                throw $e;
+        }
+    }
+
+    public function getActiveOrders()
+    {
+        try {
+            $res = $this->orderService->getActiveOrders();
+            return response($res, 200);
+        } catch (Exception $e) {
+            if ($e instanceof NotFoundException)
+                throw $e;
+        }
+    }
+
+    public function changeOrderStatus(ChangeOrderStatusRequest $request, string $orderId)
+    {
+        try {
+            $res = $this->orderService->changeOrderStatus($request, $orderId);
+            return response($res, 200);
+        } catch (Exception $e) {
             if ($e instanceof NotFoundException)
                 throw $e;
             if ($e instanceof ConflictException)
