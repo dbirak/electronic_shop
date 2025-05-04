@@ -477,15 +477,8 @@ paths:
           schema:
             type: integer
       responses:
-        "200":
+        "204":
           description: Promocja została usunięta
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
         "401":
           description: Brak autoryzacji
         "404":
