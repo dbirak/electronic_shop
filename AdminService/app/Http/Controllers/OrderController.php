@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeOrderStatusRequest;
@@ -13,7 +13,7 @@ class OrderController extends Controller
 
     public function __construct()
     {
-        $this->orderServiceUrl = env('ORDER_SERVICE_URL', 'http://localhost:8001/api');
+        $this->orderServiceUrl = env('CUSTOMER_SERVICE_URL', 'http://localhost:8001/api');
     }
 
     public function getActiveOrders()

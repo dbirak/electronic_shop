@@ -78,6 +78,8 @@ class OrderService implements IOrderService
 
         if (!isset($order)) throw new NotFoundException();
 
-        $this->orderRepository->changeOrderStatus($request, $orderId);
+        $updatedOrder = $this->orderRepository->changeOrderStatus($request, $orderId);
+
+        return $updatedOrder;
     }
 }

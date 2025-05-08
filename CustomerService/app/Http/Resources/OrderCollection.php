@@ -14,6 +14,19 @@ class OrderCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'data' => $this->collection,
+            'links' => [
+                'self' => url()->current(),
+                'next' => $this->nextPageUrl(),
+                'prev' => $this->previousPageUrl(),
+            ],
+            'meta' => [
+                'current_page' => $this->currentPage(),
+                'last_page' => $this->lastPage(),
+                'per_page' => $this->perPage(),
+                'total' => $this->total(),
+            ],
+        ];
     }
 }

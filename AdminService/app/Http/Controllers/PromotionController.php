@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePromotionRequest;
@@ -13,7 +13,7 @@ class PromotionController extends Controller
 
     public function __construct()
     {
-        $this->promotionServiceUrl = env('PROMOTION_SERVICE_URL', 'http://localhost:8002/api');
+        $this->promotionServiceUrl = env('PRODUCT_SERVICE_URL', 'http://localhost:8002/api');
     }
 
     public function store(StorePromotionRequest $request)

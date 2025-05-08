@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Http\Requests\ChangeOrderStatusRequest;
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Address;
 use App\Models\Invoice;
 use App\Models\Order;
@@ -66,7 +67,7 @@ class OrderRepository implements IOrderRepository
 
     public function getActiveOrders()
     {
-        return Order::where('status', '!=', 'cancelled')->where('status', '!=', 'completed')->get();
+        return Order::where('status', '!=', 'cancelled')->where('status', '!=', 'completed')->orderBy('created_at', 'desc')->get();
     }
 
     public function changeOrderStatus(ChangeOrderStatusRequest $request, string $orderId)
@@ -74,5 +75,7 @@ class OrderRepository implements IOrderRepository
         $order = Order::where('id', $orderId)->first();
         $order->status = $request->status;
         $order->save();
+
+        return new OrderResource($order);
     }
 }

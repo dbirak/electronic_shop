@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
@@ -13,7 +13,7 @@ class CategoryController extends Controller
 
     public function __construct()
     {
-        $this->categoryServiceUrl = env('CATEGORY_SERVICE_URL', 'http://localhost:8002/api');
+        $this->categoryServiceUrl = env('PRODUCT_SERVICE_URL', 'http://localhost:8002/api');
     }
 
     public function index()
