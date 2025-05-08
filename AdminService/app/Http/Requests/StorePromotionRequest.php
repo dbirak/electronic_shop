@@ -24,7 +24,7 @@ class StorePromotionRequest extends FormRequest
         return [
             'new_price' => 'required|numeric|min:0',
             'expiration_date' => 'required|date|after:today',
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'required',
         ];
     }
 }

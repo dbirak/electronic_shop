@@ -43,7 +43,7 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        $res = $this->categoryService->storeCategory($request, $request->user()->id);
+        $res = $this->categoryService->storeCategory($request);
         return response($res, 201);
     }
 

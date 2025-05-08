@@ -28,11 +28,33 @@ paths:
               schema:
                 $ref: "#/components/schemas/LoginResource"
         "401":
-          description: Nieprawidłowe dane logowania
+          description: Brak autoryzacji
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        "422":
+          description: Błąd walidacji danych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                          example: "The name field is required."
 
   /auth/logout:
     post:
@@ -59,6 +81,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Błąd walidacji danych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                          example: "The name field is required."
 
   /auth/register/manager:
     post:
@@ -199,8 +239,38 @@ paths:
       responses:
         "201":
           description: Kategoria została utworzona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreCategoryRequest"
         "401":
           description: Brak autoryzacji
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        "422":
+          description: Błąd walidacji danych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                          example: "The name field is required."
 
   /categories/{id}:
     get:
@@ -296,6 +366,10 @@ paths:
           schema:
             type: string
             enum: [price_asc, price_desc, created_at_asc, created_at_desc]
+        - in: query
+          name: page
+          schema:
+            type: integer
       responses:
         "200":
           description: Lista produktów
@@ -315,8 +389,38 @@ paths:
       responses:
         "201":
           description: Produkt utworzony
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductResource"
         "401":
           description: Brak autoryzacji
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        "422":
+          description: Błąd walidacji danych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                          example: "The name field is required."
 
   /products/search/details:
     get:
@@ -375,6 +479,32 @@ paths:
           description: Produkt zaktualizowany
         "401":
           description: Brak autoryzacji
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        "422":
+          description: Błąd walidacji danych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                          example: "The name field is required."
         "404":
           description: Nie znaleziono
         "409":
@@ -422,6 +552,32 @@ paths:
           description: Lista produktów
         "401":
           description: Brak autoryzacji
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        "422":
+          description: Błąd walidacji danych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                          example: "The name field is required."
         "404":
           description: Nie znaleziono
 
@@ -448,8 +604,32 @@ paths:
                 $ref: "#/components/schemas/PromotionResource"
         "401":
           description: Brak autoryzacji
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
         "422":
-          description: Błąd walidacji
+          description: Błąd walidacji danych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                          example: "The name field is required."
 
   /promotions/{id}:
     put:

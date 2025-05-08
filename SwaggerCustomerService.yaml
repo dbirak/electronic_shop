@@ -25,6 +25,24 @@ paths:
           description: Zalogowano pomyślnie
         "401":
           description: Nieprawidłowe dane logowania
+        "422":
+          description: Błąd walidacji danych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                          example: "The name field is required."
 
   /auth/logout:
     post:
@@ -62,6 +80,24 @@ paths:
       responses:
         "201":
           description: Użytkownik został zarejestrowany
+        "422":
+          description: Błąd walidacji danych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                          example: "The name field is required."
 
   /auth/change-password:
     post:
@@ -116,6 +152,24 @@ paths:
       responses:
         "201":
           description: Adres został utworzony
+        "422":
+          description: Błąd walidacji danych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                          example: "The name field is required."
 
   /addresses/{id}:
     get:
@@ -214,6 +268,24 @@ paths:
       responses:
         "201":
           description: Zamówienie zostało utworzone
+        "422":
+          description: Błąd walidacji danych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                          example: "The name field is required."
 
   /orders/{id}:
     get:

@@ -12,7 +12,7 @@ use App\Models\Product;
 use App\Models\Promotion;
 use Illuminate\Support\Facades\Storage;
 
-class ProductRepository
+class ProductRepository implements IProductRepository
 {
     public function storeProduct(StoreProductRequest $request)
     {
@@ -114,17 +114,18 @@ class ProductRepository
     public function destroyProduct($productId)
     {
         $product = Product::where('id', $productId)->first();
+        $images = Image::where('id', $product->image_id)->first();
 
-        if (Storage::exists('public/products/main_images/' . $product['main_image']))
-            Storage::delete('public/products/main_images/' . $product['main_image']);
+        if (Storage::exists('public/products/main_images/' . $images['main_image']))
+            Storage::delete('public/products/main_images/' . $images['main_image']);
 
-        $additional_images = json_decode($product['additional_images']);
+        $additional_images = json_decode($images['additional_images']);
         foreach ($additional_images as $additional_image) {
             if (Storage::exists('public/products/additional_images/' . $additional_image))
                 Storage::delete('public/products/additional_images/' . $additional_image);
         }
 
-        $product->is_deleted = true;
+        $product->is_deleted = 1;
         $product->save();
     }
 
@@ -141,7 +142,7 @@ class ProductRepository
         }
 
         if (
-            !isset($request['category'])
+            !isset($request['category']) && !isset($request['query'])
         ) {
             return $query->where('is_deleted', false)->paginate(20);
         }
@@ -158,7 +159,7 @@ class ProductRepository
         }
         if (isset($request['category'])) $query->where('category_id', $request['category']);
 
-        return $query->where('is_active', true)->where("is_payed", true)->where('is_deleted', false)->paginate(20);
+        return $query->where('is_deleted', false)->paginate(20);
     }
 
     public function getSearchDetails()

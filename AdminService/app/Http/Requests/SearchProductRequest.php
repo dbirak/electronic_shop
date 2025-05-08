@@ -23,8 +23,9 @@ class SearchProductRequest extends FormRequest
     {
         return [
             'query' => 'string|max:255',
-            'category' => 'integer|exists:categories,id',
+            'category' => 'integer',
             'order_by' => 'string|in:price_asc,price_desc,created_at_asc,created_at_desc',
+            'page' => 'integer|min:1',
         ];
     }
 }

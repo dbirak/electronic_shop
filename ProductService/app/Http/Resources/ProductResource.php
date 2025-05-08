@@ -22,9 +22,9 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'price' => $this->price,
-            'promotion' => new PromotionResource(Promotion::findOrFail($this->promotion_id)),
-            'image' => new ImageResource(Image::findOrFail($this->image_id)),
-            'category' => new CategoryResource(Category::findOrFail($this->category_id)),
+            'promotion' => $this->promotion_id ? new PromotionResource(Promotion::find($this->promotion_id)) : null,
+            'image' => $this->image_id ? new ImageResource(Image::find($this->image_id)) : null,
+            'category' => $this->category_id ? new CategoryResource(Category::find($this->category_id)) : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -19,7 +19,6 @@ class PromotionResource extends JsonResource
             'id' => $this->id,
             'new_price' => $this->new_price,
             'expiration_date' => $this->expiration_date,
-            'product' => Product::find($this->product_id),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

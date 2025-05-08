@@ -37,7 +37,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/products/search/details', [ProductController::class, 'getSearchDetails']);
     Route::post('/products/get', [ProductController::class, 'getProduct']);
 
-    //Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{id}', [CategoryController::class, 'show']);
 });
 
@@ -48,7 +48,6 @@ Route::middleware(['auth:sanctum', 'ability:manager'])->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'ability:manager,moderator'])->group(function () {
-
     Route::post('/products', [ProductController::class, 'store']);
     Route::post('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
@@ -63,10 +62,3 @@ Route::middleware(['auth:sanctum', 'ability:manager,seller'])->group(function ()
     Route::get('/orders/active', [OrderController::class, 'getActiveOrders']);
     Route::patch('/orders/{orderId}/status', [OrderController::class, 'changeOrderStatus']);
 });
-
-
-
-
-
-
-Route::get('/categories', [CategoryController::class, 'index']);

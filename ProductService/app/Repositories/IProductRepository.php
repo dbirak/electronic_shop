@@ -10,8 +10,6 @@ use App\Models\Product;
 
 interface IProductRepository
 {
-    public function getAllProducts();
-
     public function findProductById(string $productId);
 
     public function storeProduct(StoreProductRequest $request);
