@@ -5,10 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GetProductRequest;
 use App\Http\Requests\SearchProductRequest;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Htt;
 
 class ProductController extends Controller
 {
@@ -62,36 +59,6 @@ class ProductController extends Controller
         return response()->json($body, $status);
     }
 
-    public function store(StoreProductRequest $request)
-    {
-        $multipart = $this->convertRequestToMultipart($request);
-
-        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
-            ->asMultipart()
-            ->post("{$this->productServiceUrl}/products", $multipart);
-
-        return response()->json(json_decode($response->body(), true), $response->status());
-    }
-
-    public function update(UpdateProductRequest $request, string $productId)
-    {
-        $multipart = $this->convertRequestToMultipart($request);
-
-        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
-            ->asMultipart()
-            ->post("{$this->productServiceUrl}/products/{$productId}", $multipart);
-
-        return response()->json(json_decode($response->body(), true), $response->status());
-    }
-
-    public function destroy(string $productId)
-    {
-        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
-            ->delete("{$this->productServiceUrl}/products/{$productId}");
-
-        return response()->json(['message' => 'Produkt został usunięty'], $response->status());
-    }
-
     public function show(string $productId)
     {
         $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
@@ -108,7 +75,7 @@ class ProductController extends Controller
         return response()->json($response->json(), $response->status());
     }
 
-    public function getProduct(GetProductRequest $request)
+    public function getProducts(GetProductRequest $request)
     {
         $data = $request->validated();
         $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')

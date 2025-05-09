@@ -29,14 +29,13 @@ class OrderService implements IOrderService
 
     public function storeOrder(int $userId, StoreOrderRequest $request)
     {
-        $response = Http::post(env('PRODUCT_SERVICE_URL') . '/products/get', [
+        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')->post(env('PRODUCT_SERVICE_URL') . '/products/get', [
             'product_ids' => $request['product_ids']
         ]);
 
         if ($response->status() !== 200) {
             throw new NotFoundException("Nie znaleziono produktów.");
         }
-
         $products = $response->json();
 
         $order = $this->orderRepository->storeOrder($userId, $request, $products);

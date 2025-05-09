@@ -85,8 +85,6 @@ class ProductService implements IProductService
             throw new NotFoundException('Nie znaleziono produktów o ID: ' . implode(', ', $missingIds));
         }
 
-        return $products;
-
         return ProductResource::collection($products);
     }
 }

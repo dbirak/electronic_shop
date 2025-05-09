@@ -18,7 +18,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $response = Http::withToken(env('ADMIN_TOKEN'))
+        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
             ->get("{$this->categoryServiceUrl}/categories");
 
         return response()->json($response->json(), $response->status());
@@ -28,7 +28,7 @@ class CategoryController extends Controller
     {
         $data = $request->validated();
 
-        $response = Http::withToken(env('ADMIN_TOKEN'))
+        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
             ->post("{$this->categoryServiceUrl}/categories", $data);
 
         return response()->json($response->json(), $response->status());
@@ -36,7 +36,7 @@ class CategoryController extends Controller
 
     public function show(string $id)
     {
-        $response = Http::withToken(env('ADMIN_TOKEN'))
+        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
             ->get("{$this->categoryServiceUrl}/categories/{$id}");
 
         return response()->json($response->json(), $response->status());
@@ -46,7 +46,7 @@ class CategoryController extends Controller
     {
         $data = $request->validated();
 
-        $response = Http::withToken(env('ADMIN_TOKEN'))
+        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
             ->put("{$this->categoryServiceUrl}/categories/{$id}", $data);
 
         return response()->json($response->json(), $response->status());
@@ -54,7 +54,7 @@ class CategoryController extends Controller
 
     public function destroy(string $id)
     {
-        $response = Http::withToken(env('ADMIN_TOKEN'))
+        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
             ->delete("{$this->categoryServiceUrl}/categories/{$id}");
 
         return response()->json(['message' => 'Kategoria została usunięta'], $response->status());

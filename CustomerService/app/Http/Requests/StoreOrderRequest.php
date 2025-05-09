@@ -28,7 +28,7 @@ class StoreOrderRequest extends FormRequest
             'city' => 'required|string|max:255',
             'nip' => 'nullable|digits:10|regex:/^\d{10}$/',
             'product_ids' => 'required|array',
-            'product_ids.*' => 'integer|exists:products,id',
+            'product_ids.*' => 'integer',
             'status' => 'required|in:pending,preparation,sent,completed,cancelled',
             'amount' => 'required|numeric|min:0',
             'address_id' => 'required|integer|exists:addresses,id',

@@ -19,7 +19,7 @@ class PromotionController extends Controller
     public function store(StorePromotionRequest $request)
     {
         $data = $request->validated();
-        $response = Http::withToken(env('ADMIN_TOKEN'))
+        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
             ->post("{$this->promotionServiceUrl}/promotions", $data);
 
         return response()->json($response->json(), $response->status());
@@ -28,7 +28,7 @@ class PromotionController extends Controller
     public function update(UpdatePromotionRequest $request, string $id)
     {
         $data = $request->validated();
-        $response = Http::withToken(env('ADMIN_TOKEN'))
+        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
             ->put("{$this->promotionServiceUrl}/promotions/{$id}", $data);
 
         return response()->json($response->json(), $response->status());
@@ -36,7 +36,7 @@ class PromotionController extends Controller
 
     public function destroy(string $id)
     {
-        $response = Http::withToken(env('ADMIN_TOKEN'))
+        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
             ->delete("{$this->promotionServiceUrl}/promotions/{$id}");
 
         return response()->json(['message' => 'Promocja została usunięta'], $response->status());

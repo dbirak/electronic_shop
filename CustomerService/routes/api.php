@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,3 +45,10 @@ Route::middleware(['verify.admin.token'])->group(function () {
     Route::get('/orders/active', [OrderController::class, 'getActiveOrders']);
     Route::patch('/orders/{orderId}/status', [OrderController::class, 'changeOrderStatus']);
 });
+
+Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/{id}', [ProductController::class, 'show']);
+Route::get('/products/search/details', [ProductController::class, 'getSearchDetails']);
+
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{id}', [CategoryController::class, 'show']);

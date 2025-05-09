@@ -18,7 +18,8 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('address_id');
-            $table->unsignedBigInteger('invoices_id');
+            $table->unsignedBigInteger('invoice_id');
+            $table->timestamps();
         });
     }
 

@@ -319,6 +319,91 @@ paths:
         "204":
           description: Zamówienie anulowane
 
+  /categories:
+    get:
+      tags:
+        - Category
+      summary: Pobierz listę kategorii
+      responses:
+        "200":
+          description: Lista kategorii
+
+  /categories/{id}:
+    get:
+      tags:
+        - Category
+      summary: Pobierz szczegóły kategorii
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Szczegóły kategorii
+        "401":
+          description: Brak autoryzacji
+        "404":
+          description: Nie znaleziono kategorii
+
+  /products:
+    get:
+      tags:
+        - Product
+      summary: Wyszukaj produkty
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+        - in: query
+          name: category
+          schema:
+            type: integer
+        - in: query
+          name: order_by
+          schema:
+            type: string
+            enum: [price_asc, price_desc, created_at_asc, created_at_desc]
+        - in: query
+          name: page
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lista produktów
+
+  /products/search/details:
+    get:
+      tags:
+        - Product
+      summary: Pobierz dane pomocnicze do wyszukiwarki
+      responses:
+        "200":
+          description: Dane wyszukiwania
+        "401":
+          description: Brak autoryzacji
+
+  /products/{id}:
+    get:
+      tags:
+        - Product
+      summary: Pobierz szczegóły produktu
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Szczegóły produktu
+        "401":
+          description: Brak autoryzacji
+        "404":
+          description: Produkt nie znaleziony
+
 components:
   securitySchemes:
     bearerAuth:

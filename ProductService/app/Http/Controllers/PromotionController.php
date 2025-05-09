@@ -40,7 +40,7 @@ class PromotionController extends Controller
      */
     public function store(StorePromotionRequest $request)
     {
-        $res = $this->promotionService->storePromotion($request, $request->user()->id);
+        $res = $this->promotionService->storePromotion($request);
         return response($res, 201);
     }
 

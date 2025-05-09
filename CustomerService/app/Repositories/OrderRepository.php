@@ -19,13 +19,15 @@ class OrderRepository implements IOrderRepository
 
     public function storeOrder(int $userId, StoreOrderRequest $request, $products)
     {
-        $address = Address::where('id', $request["address_id"])->first();
+        $address = Address::where('id', $request["address_id"])->firstOrFail();
 
-        $totalAmount = collect($products)->sum('price');
+        $totalAmount = collect($products)->sum(function ($product) {
+            return $product['promotion'] != null ? $product['promotion']['new_price'] : $product['price'];
+        });
 
         $invoice = new Invoice();
         $invoice->name = $request["name"];
-        $invoice->adreess = $request["adreess"];
+        $invoice->adreess = $request["address"];
         $invoice->post_code = $request["post_code"];
         $invoice->city = $request["city"];
         $invoice->nip = $request["nip"] ?? null;
@@ -42,8 +44,8 @@ class OrderRepository implements IOrderRepository
         $order->status = $request["status"];
         $order->amount = $totalAmount;
         $order->user_id = $userId;
-        $order->address_id = $request["address_id"];
-        $order->invoices_id = $invoice->id;
+        $order->address_id = $address->id;
+        $order->invoice_id = $invoice->id;
         $order->save();
 
         return $order;
@@ -67,7 +69,7 @@ class OrderRepository implements IOrderRepository
 
     public function getActiveOrders()
     {
-        return Order::where('status', '!=', 'cancelled')->where('status', '!=', 'completed')->orderBy('created_at', 'desc')->get();
+        return Order::where('status', '!=', 'cancelled')->where('status', '!=', 'completed')->orderBy('created_at', 'desc')->paginate(20);
     }
 
     public function changeOrderStatus(ChangeOrderStatusRequest $request, string $orderId)

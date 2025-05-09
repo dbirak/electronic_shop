@@ -26,9 +26,10 @@ Route::middleware(['verify.admin.token'])->group(function () {
     Route::put('/categories/{id}', [CategoryController::class, 'update']);
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
+    Route::post('/products/get', [ProductController::class, 'getProduct']);
     Route::post('/products', [ProductController::class, 'store']);
     Route::post('/products/{id}', [ProductController::class, 'update']);
-    Route::post('/products/get', [ProductController::class, 'getProduct']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 
     Route::post('/promotions', [PromotionController::class, 'store']);
     Route::put('/promotions/{id}', [PromotionController::class, 'update']);
@@ -41,7 +42,3 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/products/search/details', [ProductController::class, 'getSearchDetails']);
-
-
-
-Route::delete('/products/{id}', [ProductController::class, 'destroy']);

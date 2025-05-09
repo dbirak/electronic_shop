@@ -23,7 +23,7 @@ class GetProductRequest extends FormRequest
     {
         return [
             'product_ids' => 'required|array',
-            'product_ids.*' => 'integer|exists:products,id',
+            'product_ids.*' => 'integer',
         ];
     }
 }

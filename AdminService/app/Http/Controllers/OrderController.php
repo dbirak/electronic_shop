@@ -18,7 +18,7 @@ class OrderController extends Controller
 
     public function getActiveOrders(Request $request)
     {
-        $response = Http::withToken(env('ADMIN_TOKEN'))
+        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
             ->get("{$this->orderServiceUrl}/orders/active");
 
         $status = $response->status();
@@ -28,6 +28,8 @@ class OrderController extends Controller
         }
 
         $body = $response->json();
+
+        return $body;
 
         if (!isset($body['meta'])) {
             return response()->json($body, $status);
@@ -61,7 +63,7 @@ class OrderController extends Controller
     {
         $data = $request->validated();
 
-        $response = Http::withToken(env('ADMIN_TOKEN'))
+        $response = Http::withToken(env('ADMIN_TOKEN'))->accept('application/json')
             ->patch("{$this->orderServiceUrl}/orders/{$orderId}/status", $data);
 
         return response()->json($response->json(), $response->status());
